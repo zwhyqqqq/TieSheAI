@@ -1,6 +1,6 @@
 # 项目状态与跨对话交接
 
-更新时间：2026-11-11 14:51（Asia/Hong_Kong，UTC+08:00）。
+更新时间：2026-11-11 15:04（Asia/Hong_Kong，UTC+08:00）。
 工作目录：`/root/TieSheAI`。协作规则见 [AGENTS.md](../AGENTS.md)，
 技术决策与边界见 [DECISIONS.md](DECISIONS.md)，精简交接见 [HANDOFF.md](HANDOFF.md)。
 平台开发目标、T01-C2 至 T08 计划及历史 T09 范围说明见 [ROADMAP.md](ROADMAP.md)。
@@ -27,6 +27,7 @@ HANDOFF 不超过 100 行，保留最新阶段及必要历史摘要，原始日�
 | 整个 T02 | 对话 JSONL 数据流程通过，其他输入形态未验 | 固定输出 Dataset 版本及 Manifest 哈希 |
 | T03-A | 数据、资源诊断、CPU 模板检查通过；GPU 环境受阻，未完整通过 | [训练准备验收](T03A_TRAINING_READINESS.md) |
 | T03 训练适配器 | 源码与 CPU 预检通过 | [适配器验收](T03_TRAINING_ADAPTER.md)，CUDA 训练与真实 Model 登记待验 |
+| GitHub 项目源码 | 已发布 | [codex/tiesheai-t03](https://github.com/zwhyqqqq/TieSheAI/tree/codex/tiesheai-t03) |
 | T03 真实训练 / T04–T08 | 未启动 | GPU 环境复验与真实训练分别按授权执行 |
 | T09：历史科研/课题交付 | 当前范围排除，未启动 | 用户明确本项目只需平台开发；不作为平台 Demo 完成门槛 |
 | GPU | 训练入口 CUDA 门禁实测退出 3 | T03-A 历史 `nvidia-smi` 退出 9，VMware 来宾无 NVIDIA PCI 设备 |
@@ -118,6 +119,16 @@ SSH 转发端到端、跨主机环境重建、Agent/主机重启恢复、备份�
   验收证据及失败记录：[T01-B 验收报告](T01B_ACCEPTANCE.md)。
 
 ## 任务交接记录
+
+### 2026-11-11 15:04 TieSheAI 项目源码发布到 GitHub
+
+- **时间（Asia/Hong_Kong）** 2026-11-11 15:04。
+- **任务 / 阶段及状态** 项目根仓库源码和交接已发布到 [codex/tiesheai-t03](https://github.com/zwhyqqqq/TieSheAI/tree/codex/tiesheai-t03)。训练适配器 CPU 验收结论沿用，GPU 训练待验。
+- **本次结果与项目进度** 本地源码提交 `9d40c37fac1b5c10480f37edb41d39d5b4106a21` 保存在 `codex/tiesheai-t03-local`，包含当前部署源码、数据准备、T03 适配器与必要文档。远端 `master` 原为独立的 ClearML SDK 历史，`git merge-base` 退出 1。命令行 HTTPS 写入缺少凭据，`git push` 退出 128。通过已连接的 GitHub 集成创建独立项目分支。首个远端提交 `a695bbcefe42c6975fe19451d62e248ae8639404` 与本地源码提交的 Git tree 完全一致，`git fetch` 和 `git diff --exit-code` 均为 0。
+- **实际修改文件** 提交根仓库既有 T01-C2 至 T03 的源码、测试和文档。本次另更新 STATUS 和 HANDOFF。Web / Server Fork 继续按独立仓库管理。
+- **测试命令、结果、退出码及证据** 出站文件与历史敏感信息扫描、`git diff --cached --check`、文档路径及 Python 语法检查均通过，退出 0。T02-A 8 项、T02-B 7 项、T03 14 项 `unittest discover` 回归最终均为 0。T02-B 首次使用的解释器没有 ClearML，退出 1，改用现有 SDK 解释器通过。凭据、忽略证据与运行资产留在本地。命令和远端核对见 `infra/evidence/push-20261111/commands.jsonl` 与 `result.json`。
+- **遗留问题 / 未验证项** 独立 Web Fork 的既有未提交补丁仍在其工作区。GPU 环境、训练和模型登记待验。
+- **下一步启动条件** GPU 环境续验和真实训练分别按用户授权执行。
 
 ### 2026-11-11 14:51 T03 训练适配器与 CPU 预检通过
 

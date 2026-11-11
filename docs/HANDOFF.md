@@ -1,6 +1,6 @@
 # 跨 Codex / ChatGPT 对话精简交接
 
-更新时间：2026-11-11 14:51（Asia/Hong_Kong）。目录 `/root/TieSheAI`。
+更新时间：2026-11-11 15:04（Asia/Hong_Kong）。目录 `/root/TieSheAI`。
 入口：[STATUS](STATUS.md)、[DECISIONS](DECISIONS.md)、[AGENTS](../AGENTS.md)、[ROADMAP](ROADMAP.md)。
 范围为平台开发，覆盖网页上传、训练、部署、调用及评估。旧 T09 科研课题范围排除。
 
@@ -17,6 +17,7 @@
 | T02 | 公开对话 JSONL 数据流程与训练输入交接通过，其他输入形态未验 |
 | T03-A | 数据、资源诊断、CPU 模板检查通过；GPU 环境受阻，未完整通过 |
 | T03 训练适配器 | 源码与 CPU 预检通过。真实 GPU 训练与产物登记待验 |
+| GitHub 项目源码 | 已发布至 [codex/tiesheai-t03](https://github.com/zwhyqqqq/TieSheAI/tree/codex/tiesheai-t03) |
 | T03 真实训练 / T04–T08 | 未启动 |
 
 ## 最近实施 T03 训练适配器
@@ -90,6 +91,7 @@
 - [Artifact 修复报告](T01C_ARTIFACT_DOWNLOAD_FIX.md) 与旧 release 保留。官方 8080 和 Server 2.4.0 继续使用原六服务。
 - Web HEAD `be71d50e7504eb00a2e09900fabbe8697ed23558` 有既有未提交修改，本轮核对工作区一致。Server Fork HEAD `2ebdc43951b9432cc7fa528bbb3a7100fc6fe805`。
 - [本地检查点](VERSION_CHECKPOINT.md) 及原 STATUS 历史记录仍可查询，当前工作区以实际状态为准。
+- 项目根仓库源码已发布。首个远端提交 `a695bbcefe42c6975fe19451d62e248ae8639404` 与本地源码提交 `9d40c37fac1b5c10480f37edb41d39d5b4106a21` 文件树相同。CLI 写入因缺少凭据退出 128，GitHub 集成发布成功。29 项回归与敏感信息扫描通过，退出 0。另更新 STATUS 与 HANDOFF，证据在 `infra/evidence/push-20261111/`。
 
 ## 遗留与启动条件
 

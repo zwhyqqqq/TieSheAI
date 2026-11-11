@@ -1,6 +1,6 @@
 # 项目状态与跨对话交接
 
-更新时间：2026-11-11 15:04（Asia/Hong_Kong，UTC+08:00）。
+更新时间：2026-11-11 15:54（Asia/Hong_Kong，UTC+08:00）。
 工作目录：`/root/TieSheAI`。协作规则见 [AGENTS.md](../AGENTS.md)，
 技术决策与边界见 [DECISIONS.md](DECISIONS.md)，精简交接见 [HANDOFF.md](HANDOFF.md)。
 平台开发目标、T01-C2 至 T08 计划及历史 T09 范围说明见 [ROADMAP.md](ROADMAP.md)。
@@ -119,6 +119,63 @@ SSH 转发端到端、跨主机环境重建、Agent/主机重启恢复、备份�
   验收证据及失败记录：[T01-B 验收报告](T01B_ACCEPTANCE.md)。
 
 ## 任务交接记录
+
+### 2026-11-11 15:54 当前项目源码提交与 GitHub 保存
+
+- **时间（Asia/Hong_Kong）** 2026-11-11 15:54。
+- **任务与状态** 按用户授权保存当前源码，技术阶段沿用当前表。主项目在 `codex/tiesheai-t03` 保存。
+- **结果** 根仓库保存全部当前文档。Web改动形成独立本地提交 `15afce31f2e035665ced9e61950d46423086b30e`。GitHub集成对Fork上游无写权限，采用公开基点加完整补丁保存到主项目，覆盖Widgets配置、下载修复、网页入口和测试13文件。Server固定原公开提交。
+- **修改** 新增 `configs/source-snapshot.json`、`patches/clearml-web/source-save-20261111.patch`、`docs/SOURCE_SNAPSHOT.md`，更新STATUS、HANDOFF、ROADMAP、DECISIONS，提交此前本地文档改动。
+- **验证** `python3 -B infra/evidence/save-project-20261111/run.py` 记录实际命令。`check.py scan/delivery`、36项 `node clearml-web/tests/artifact-download.cjs`、`restore.py` 独立恢复最终通过，退出0。恢复2486文件，完整tree为 `180bb9f47ea451587f17afa5bb4c2e5d9982fb9c`，与Web提交一致。最终远端提交与本地tree核对见同目录 `result.json`。
+- **失败复验** Web首次提交因缺少作者配置退出128，使用本次命令级GitHub作者信息重试退出0。原失败与恢复证据均保留。
+- **遗留与下一步启动条件** 本轮保存源码和文档，运行数据与凭据沿原忽略规则管理。GPU环境和训练按后续授权安排。公开恢复步骤见 [说明](SOURCE_SNAPSHOT.md)。
+
+### 2026-11-11 15:40 项目用途、当前进度与后续工作说明
+
+- **时间（Asia/Hong_Kong）** 2026-11-11 15:40。
+- **任务与状态** 项目说明和阶段核对完成，技术阶段沿用当前表。
+- **结果** 按用户只做平台开发的范围说明五项网页功能及 ClearML、Unsloth、OpenCompass 分工。基础平台、公开对话 JSONL 数据流程已验，当前为训练适配与 GPU 环境接入阶段。后续依次完成真实训练、部署与调用、评估、流程编排及网页联调，另收尾品牌菜单、目标环境和必要运维验收。
+- **修改** 更新 STATUS、HANDOFF，保留已有使用入口、发布复核和月度计划记录。
+- **验证** `python3 -B infra/evidence/project-explanation-20261111/check.py` 检查文档引用、阶段一致性、修改范围、HANDOFF行数及三仓库差异通过，退出0。原状态 `before.json`，结果 `result.json` 位于同目录。本轮依据现有报告核对。
+- **遗留与下一步启动条件** GPU分配或节点待落实，训练、部署、调用和评估按各阶段授权实施。其他输入格式、完整C3与远程/恢复等未验项继续记录。
+
+### 2026-11-11 15:19 使用入口与功能说明核对
+
+- **时间（Asia/Hong_Kong）** 2026-11-11 15:19。
+- **任务 / 阶段及状态** 当前使用方式说明与只读检查完成，技术阶段进度沿用上表。
+- **本次结果与项目进度** 七容器 running/healthy，CPU Agent 与数据入口适配服务 active。Fork 首页、数据准备页、同源 API ping、官方首页和 Fileserver 根各 HTTP 200。当前使用入口为 18080，侧栏数据准备支持 JSONL 上传、CPU 校验/精确去重/按来源分组划分、任务日志/产物查看、输出版本下载与选择。基础项目、Task、Dataset 流程沿用历史验收。GPU 训练、模型部署/调用和评估仍待完成。
+- **实际修改文件** 更新 `docs/STATUS.md` 和 `docs/HANDOFF.md`；本地忽略证据 `infra/evidence/usage-review-20261111/`。
+- **测试命令、结果、退出码及证据** `docker ps --format`、`systemctl is-active tiesheai-clearml-cpu-agent tiesheai-web-data-entry.service`、`hostname -I` 和 Python urllib 五地址探测均退出 0，见同目录 `runtime.json`。文档检查 `python3 -B infra/evidence/usage-review-20261111/check.py` 与 `git diff --check` 通过，退出 0，见 `document-check.json`。首次文档写入因并发新增记录触发行数限制，检查退出 1；压缩历史摘要并保留并发发布记录后复验通过。
+- **遗留问题 / 未验证项** 浏览器登录/业务本轮未重跑，远程客户端 SSH 转发端到端未验。服务仅监听回环，用户在自己电脑上访问需先执行 `ssh -N -L 18080:127.0.0.1:18080 root@192.168.52.59`，随后打开 `http://127.0.0.1:18080/`。源码菜单包含 Model Endpoints 和 Pipelines，相关业务集成仍待验收。
+- **下一步启动条件（须用户明确授权，不自动执行）** 用户可按说明访问当前平台，后续功能实施及 GPU 训练依对应阶段授权启动。
+
+### 2026-11-11 15:20 复核 GitHub 发布范围
+
+- **时间（Asia/Hong_Kong）** 2026-11-11 15:20。
+- **任务与状态** 发布复核完成。训练适配器 CPU 结论沿用，GPU 环境与真实训练待验。
+- **结果** `git ls-remote --exit-code origin refs/heads/codex/tiesheai-t03` 退出0，远端与本地HEAD均为 `b2cdbef09e663113e1ef449114acb7e679a2ac50`。GitHub集成回读提交与训练入口成功，入口Git blob为 `144d66c841438f0864bfe2c8bead530a6fa23c78`，与本地一致。独立Web Fork有未提交修改，Server Fork干净。检查时另有15:15月度计划文档更新，已保留。
+- **修改** 更新ROADMAP的源码与最近release记录，更新STATUS和HANDOFF，本轮更新保存在本地工作区。
+- **验证** `python3 -B infra/evidence/github-publication-review-20261111/check.py` 的文档引用、范围、HANDOFF行数、三仓库差异与远端回读元数据检查通过，退出0。证据同目录 `publication.json`、`before.json`、`result.json`。
+- **遗留与下一步启动条件** 需落实当前VM的GPU分配或提供可连接GPU节点，继而续验T03-A。Web Fork源码发布范围须单独核对，训练启动按后续授权安排。
+
+### 2026-11-11 15:15 核对 11 月计划完成情况
+
+- **时间（Asia/Hong_Kong）** 2026-11-11 15:15。
+- **任务 / 阶段及状态** 月度计划对照核查完成，11 月计划整体未完成。直接读取本轮附件《开发计划11月(1).md》作为验收对照。
+- **本次结果与项目进度** 对照附件五项交付及其具体工作，结论如下。技术阶段状态沿用最近验收。
+
+| 11 月交付 | 本次核对结论 | 已有验收与缺口 |
+|---|---|---|
+| ClearML 基础平台（必须） | 已有基础功能验收 | T01-A/B、C2/C3-B 和 T02 已覆盖基础访问、认证、任务记录及 Dataset 流程；完整 C3 仍未通过 |
+| 容器化部署环境（必须） | 本机完成，目标云端待验 | 镜像锁定、Compose、持久化、启动配置与部署说明已有；目标云端运行、远程端到端和跨主机重建待验 |
+| 前端基础适配（必须） | 未完成 | Fork 构建部署、下载修复和数据准备入口已验；平台名称、Logo 及必要菜单整理尚无完整交付验收，源码标题和默认 Logo 仍使用 ClearML |
+| 任务执行环境（必须） | CPU 基础任务已完成 | T01-B Smoke 和 T02 真实 CPU Agent 处理、日志、参数、产物记录已验；GPU 训练另待验 |
+| Unsloth 初步接入（争取） | 部分完成 | 固定模型/公开数据、适配器及 CPU 预检通过；独立 GPU 环境、Unsloth 实跑、Agent 真实微调和模型产物保存回读待验 |
+
+- **实际修改文件** 仅更新 `docs/STATUS.md`、`docs/HANDOFF.md`；本地核对证据位于 `infra/evidence/november-review-20261111/`。
+- **测试命令、结果、退出码及证据** 文档检查 `python3 -B infra/evidence/november-review-20261111/check.py` 与 `git diff --check` 通过，退出 0。检查内容一致性、引用路径、HANDOFF 行数、修改范围及 Fork 原状态，见同目录 `result.json`、`before.json`。历史功能验收见 [T02 公开数据报告](T02_PUBLIC_DATA_ACCEPTANCE.md)、[训练准备](T03A_TRAINING_READINESS.md)及[适配器报告](T03_TRAINING_ADAPTER.md)。本次为文档与源码核对，运行服务、浏览器、GPU 和训练测试均未执行。
+- **遗留问题 / 未验证项** 必做项缺口为名称/Logo 基础适配与目标云端部署验证；Unsloth 仍受 GPU 条件限制。当前为 11 月 11 日，计划安排覆盖至 11 月 30 日。
+- **下一步启动条件（须用户明确授权，不自动执行）** 前端任务明确名称、Logo 和必要入口，目标部署明确云端环境，训练续验落实可用 GPU 节点并分别授权相应实施。
 
 ### 2026-11-11 15:04 TieSheAI 项目源码发布到 GitHub
 

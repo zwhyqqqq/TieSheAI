@@ -1,0 +1,733 @@
+diff --git a/angular.json b/angular.json
+index d4d98cfa0e00353a2021c0c6ca69efc28eb3bd05..a91b0b0d7082b8f9db58370ad96d8d18c29e79d4 100644
+--- a/angular.json
++++ b/angular.json
+@@ -235,2 +235,5 @@
+-              "src/app/webapp-common/clearml-applications/report-widgets/src/app/webapp-common/assets",
+-              "src/app/webapp-common/clearml-applications/report-widgets/src/app/webapp-common/assets/fonts/trains.ttf"
++              {
++                "glob": "**/*",
++                "input": "src/app/webapp-common/assets",
++                "output": "app/webapp-common/assets"
++              }
+diff --git a/src/app/app.constants.ts b/src/app/app.constants.ts
+index 02f7237b08ec2c95ee2a0bb66ff371c81cc73c55..bd702fb6cff081be319c8b7c073c38f05fe1d780 100644
+--- a/src/app/app.constants.ts
++++ b/src/app/app.constants.ts
+@@ -93,0 +94 @@ export let HTTP = {
++  FILE_SERVER_ALIASES: [] as string[],
+@@ -122,0 +124 @@ export const updateHttpUrlBaseConstant = (_environment: Environment) => {
++  HTTP.FILE_SERVER_ALIASES = Array.isArray(_environment.fileServerAliases) ? _environment.fileServerAliases : [];
+diff --git a/src/app/app.routes.ts b/src/app/app.routes.ts
+index 8f05acfc52d77b65faf0c515d835979cb4527b29..6942f112dd877f64e1994fb958b2f9220875f707 100644
+--- a/src/app/app.routes.ts
++++ b/src/app/app.routes.ts
+@@ -139,0 +140,5 @@ export const routes: Routes = [
++      {
++        path: 'data-preparation',
++        data: {search: false},
++        loadComponent: () => import('./features/data-preparation/data-preparation.component').then(c => c.DataPreparationComponent),
++      },
+diff --git a/src/app/features/data-preparation/data-preparation.component.html b/src/app/features/data-preparation/data-preparation.component.html
+new file mode 100644
+index 0000000000000000000000000000000000000000..75628d0bed04fb96a8312b768aa3cd012be092cc
+--- /dev/null
++++ b/src/app/features/data-preparation/data-preparation.component.html
+@@ -0,0 +1,93 @@
++<main class="data-page">
++  <h1>数据准备</h1>
++  <div class="panels">
++    <section aria-labelledby="upload-title">
++      <h2 id="upload-title">上传对话数据</h2>
++      <p>选择 UTF-8 conversation-v1 JSONL 文件，最大 1 MiB。每行包含 messages，user 和 assistant 交替，可用 source_id 标记来源组。</p>
++      <label for="conversation-file">JSONL 文件</label>
++      <input id="conversation-file" type="file" accept=".jsonl" (change)="chooseFile($event)" [disabled]="!ready() || busy()">
++      <label class="checkbox"><input type="checkbox" [(ngModel)]="synthetic" [disabled]="busy()">合成测试数据</label>
++      <button mat-flat-button type="button" (click)="upload()" [disabled]="!ready() || !file() || busy()">上传并登记 Dataset</button>
++    </section>
++
++    <section aria-labelledby="process-title">
++      <h2 id="process-title">CPU 处理</h2>
++      @if (current(); as record) {
++        <label for="active-request">最近请求</label>
++        <select id="active-request" [ngModel]="record.request_id" (ngModelChange)="switchRequest($event)" [disabled]="busy()">
++          @for (item of requests(); track item.request_id) {
++            <option [value]="item.request_id">{{item.filename}} · {{item.request_id.slice(0, 8)}}</option>
++          }
++        </select>
++        @if (record.input_dataset_id) {
++          <p>输入 Dataset v{{record.input_version}} <code>{{record.input_dataset_id}}</code></p>
++        }
++        <div class="options">
++          <label for="seed">随机种子 <input id="seed" type="number" [(ngModel)]="seed" [disabled]="!!record.submitted_parameters || busy()"></label>
++          <label for="validation-fraction">验证组比例 <input id="validation-fraction" type="number" step="any" [(ngModel)]="validationFraction" [disabled]="!!record.submitted_parameters || busy()"></label>
++        </div>
++        <p>验证比例按来源组计算。rail-cpu 空闲时接受提交。</p>
++        <div class="actions">
++          <button mat-flat-button type="button" (click)="submit()" [disabled]="busy() || !!record.pending || !!record.submitted || !['uploaded', 'created'].includes(record.status)">提交 CPU 处理</button>
++          <button mat-button type="button" (click)="refresh()" [disabled]="busy()">刷新状态</button>
++        </div>
++        <p role="status" data-id="preparation-status">状态 {{record.status}}</p>
++        @if (record.pending) {
++          <p role="alert">操作结果待核对，请刷新状态或查看已有任务。</p>
++        }
++        @if (record.error || statusError()) {
++          <p class="error" role="alert">{{record.error || statusError()}}</p>
++        }
++        @if (record.processing_task_id && record.task_project) {
++          <div class="actions">
++            <a [routerLink]="['/projects', record.task_project, 'tasks', record.processing_task_id, 'output', 'log']">任务日志</a>
++            <a [routerLink]="['/projects', record.task_project, 'tasks', record.processing_task_id, 'output', 'artifacts']">任务产物</a>
++          </div>
++        }
++        @if (record.status === 'completed' && record.statistics; as stats) {
++          <p data-id="preparation-summary">唯一 {{stats.unique_records}} · 重复 {{stats.duplicates_removed}} · 训练 {{stats.train_records}} · 验证 {{stats.validation_records}}</p>
++          <p>输出 Dataset v{{record.output_version}} <code>{{record.output_dataset_id}}</code></p>
++          <p>Manifest SHA-256 <code>{{record.manifest_sha256}}</code></p>
++        }
++      } @else {
++        <p>上传登记完成后可配置并提交处理。</p>
++      }
++    </section>
++  </div>
++
++  @if (error()) {
++    <p class="error" role="alert" data-id="preparation-error">{{error()}}</p>
++  }
++
++  <section class="catalog" aria-labelledby="catalog-title">
++    <div class="catalog-heading">
++      <h2 id="catalog-title">可选输出 Dataset</h2>
++      <button mat-button type="button" (click)="loadCatalog()" [disabled]="!ready() || busy()">刷新列表</button>
++    </div>
++    @if (selected(); as choice) {
++      <div class="selection" role="status" data-id="selected-dataset">
++        已选 v{{choice.version}} <code>{{choice.id}}</code>
++        <span>Manifest SHA-256 <code>{{choice.manifest_sha256}}</code></span>
++      </div>
++    }
++    @if (catalogError()) {
++      <p class="error" role="alert">{{catalogError()}}</p>
++    }
++    @for (dataset of datasets(); track dataset.id) {
++      <article class="dataset" [attr.data-dataset-id]="dataset.id">
++        <div>
++          <h3>{{dataset.name}} · v{{dataset.version}}</h3>
++          <p>训练 {{dataset.statistics.train_records}} · 验证 {{dataset.statistics.validation_records}}</p>
++          <code>{{dataset.id}}</code>
++        </div>
++        <div class="actions">
++          <a [routerLink]="['/datasets/simple', dataset.project, 'tasks', dataset.id]">查看 Dataset</a>
++          <button mat-button type="button" (click)="downloadDataset(dataset.id)" [disabled]="busy()">下载结果</button>
++          <button mat-stroked-button type="button" (click)="selectDataset(dataset.id)" [disabled]="busy() || selected()?.id === dataset.id">选择 Dataset</button>
++        </div>
++      </article>
++    } @empty {
++      <p>暂无已加载的兼容输出。</p>
++    }
++  </section>
++</main>
+diff --git a/src/app/features/data-preparation/data-preparation.component.scss b/src/app/features/data-preparation/data-preparation.component.scss
+new file mode 100644
+index 0000000000000000000000000000000000000000..27a291ce6b04fd0168909a5d06e82cd1deb0a82c
+--- /dev/null
++++ b/src/app/features/data-preparation/data-preparation.component.scss
+@@ -0,0 +1,56 @@
++:host {
++  display: block;
++  height: 100%;
++  min-height: 0;
++  overflow: auto;
++  color: var(--color-on-surface);
++}
++
++.data-page {
++  max-width: 1120px;
++  margin: 0 auto;
++  padding: 24px;
++}
++
++.panels {
++  display: grid;
++  grid-template-columns: repeat(2, minmax(0, 1fr));
++  gap: 16px;
++}
++
++section {
++  background: var(--color-surface-container-lowest);
++  border: 1px solid var(--color-outline-variant);
++  border-radius: 8px;
++  padding: 20px;
++}
++
++h2 { font-size: 18px; margin: 0 0 12px; }
++h3 { font-size: 15px; margin: 0 0 4px; }
++p { margin: 10px 0; }
++label { display: block; margin: 10px 0 4px; }
++input, select { display: block; max-width: 100%; margin-top: 4px; }
++input[type=number], select {
++  padding: 6px 8px;
++  border: 1px solid var(--color-outline);
++  border-radius: 4px;
++  background: var(--color-surface);
++  color: inherit;
++}
++.checkbox { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
++.checkbox input { margin: 0; }
++.options, .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
++.options input { width: 145px; }
++.catalog { margin-top: 16px; }
++.catalog-heading, .dataset { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
++.catalog-heading h2 { margin: 0; }
++.dataset { border-top: 1px solid var(--color-outline-variant); padding: 12px 0; }
++.selection { padding: 12px 0; }
++.selection span { display: block; }
++code { overflow-wrap: anywhere; color: inherit; }
++.error { color: var(--color-error); }
++a { color: var(--color-primary); }
++
++@media (max-width: 850px) {
++  .panels { grid-template-columns: minmax(0, 1fr); }
++}
+diff --git a/src/app/features/data-preparation/data-preparation.component.ts b/src/app/features/data-preparation/data-preparation.component.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..9f5366a52096fc4bc7909b4ffc5615262615d4fe
+--- /dev/null
++++ b/src/app/features/data-preparation/data-preparation.component.ts
+@@ -0,0 +1,293 @@
++import {ChangeDetectionStrategy, Component, DestroyRef, inject, signal} from '@angular/core';
++import {FormsModule} from '@angular/forms';
++import {MatButtonModule} from '@angular/material/button';
++import {RouterLink} from '@angular/router';
++import {saveArtifactResponse} from '~/shared/utils/artifact-download';
++
++type Statistics = {
++  unique_records: number;
++  duplicates_removed: number;
++  train_records: number;
++  validation_records: number;
++};
++
++type PreparationOptions = {seed: number; validation_fraction: number};
++
++type RequestRecord = {
++  request_id: string;
++  filename: string;
++  status: string;
++  pending?: string;
++  error?: string;
++  input_dataset_id?: string;
++  input_version?: string;
++  processing_task_id?: string;
++  task_project?: string;
++  output_dataset_id?: string;
++  output_version?: string;
++  manifest_sha256?: string;
++  submitted_parameters?: PreparationOptions;
++  submitted?: boolean;
++  statistics?: Statistics;
++};
++
++type Selection = {id: string; version: string; manifest_sha256: string};
++type PreparedDataset = Selection & {name: string; project: string; statistics: Statistics};
++type Bootstrap = {
++  user: {id: string};
++  requests: RequestRecord[];
++  selected: Selection | null;
++  max_bytes: number;
++};
++
++const API = '/data-entry/api';
++const errorText = (error: unknown) => error instanceof Error ? error.message : String(error);
++
++@Component({
++  standalone: true,
++  templateUrl: './data-preparation.component.html',
++  styleUrl: './data-preparation.component.scss',
++  changeDetection: ChangeDetectionStrategy.OnPush,
++  imports: [FormsModule, MatButtonModule, RouterLink],
++})
++export class DataPreparationComponent {
++  private readonly destroyRef = inject(DestroyRef);
++  private readonly refreshTimer: number;
++  private userId = '';
++  private refreshing = false;
++
++  readonly requests = signal<RequestRecord[]>([]);
++  readonly current = signal<RequestRecord | null>(null);
++  readonly datasets = signal<PreparedDataset[]>([]);
++  readonly selected = signal<Selection | null>(null);
++  readonly error = signal('');
++  readonly statusError = signal('');
++  readonly catalogError = signal('');
++  readonly busy = signal(false);
++  readonly ready = signal(false);
++  readonly maxBytes = signal(1048576);
++  readonly file = signal<File | null>(null);
++  synthetic = false;
++  seed: number | null = 42;
++  validationFraction: number | null = 0.25;
++
++  constructor() {
++    void this.load();
++    this.refreshTimer = window.setInterval(() => {
++      const status = this.current()?.status;
++      if (status && ['created', 'queued', 'in_progress'].includes(status)) {
++        void this.refresh();
++      }
++    }, 3000);
++    this.destroyRef.onDestroy(() => window.clearInterval(this.refreshTimer));
++  }
++
++  private async api<T>(path: string, body?: object): Promise<T> {
++    const response = await this.request(path, body);
++    return response.json() as Promise<T>;
++  }
++
++  private async request(path: string, body?: object): Promise<Response> {
++    const response = await fetch(API + path, body ? {
++      method: 'POST',
++      headers: {'Content-Type': 'application/json', 'X-TieSheAI-Request': '1'},
++      body: JSON.stringify(body),
++    } : {});
++    if (!response.ok) {
++      const detail = await response.json().catch(() => ({}));
++      const message = detail.error || (response.status === 401 ? '请登录 ClearML' : '请求失败（HTTP ' + response.status + '）');
++      let validation: {errors?: {line: number}[]} = {};
++      try {
++        validation = JSON.parse(message);
++      } catch {
++        // The adapter also returns plain text for non-validation errors.
++      }
++      if (validation.errors?.length) {
++        const lines = validation.errors.slice(0, 20).map(item => item.line).join('、');
++        const suffix = validation.errors.length > 20 ? '等 ' + validation.errors.length + ' 行' : '行';
++        throw new Error('第 ' + lines + ' ' + suffix + '不符合 conversation-v1 格式');
++      }
++      throw new Error(message);
++    }
++    return response;
++  }
++
++  private async load() {
++    try {
++      const state = await this.api<Bootstrap>('/bootstrap');
++      this.userId = state.user.id;
++      this.requests.set(state.requests);
++      this.selected.set(state.selected);
++      this.maxBytes.set(state.max_bytes);
++      this.ready.set(true);
++      const previous = localStorage.getItem(this.storageKey('active'));
++      const record = state.requests.find(item => item.request_id === previous) || state.requests[0];
++      if (record) {
++        this.setCurrent(record);
++        void this.refresh();
++      }
++      await this.loadCatalog();
++    } catch (error) {
++      this.error.set(errorText(error));
++    }
++  }
++
++  private storageKey(name: string) {
++    return 'tiesheai-data-preparation:' + this.userId + ':' + name;
++  }
++
++  private setCurrent(record: RequestRecord) {
++    this.current.set(record);
++    localStorage.setItem(this.storageKey('active'), record.request_id);
++    this.requests.update(records => records.some(item => item.request_id === record.request_id)
++      ? records.map(item => item.request_id === record.request_id ? record : item)
++      : [record, ...records]);
++  }
++
++  async loadCatalog() {
++    try {
++      this.catalogError.set('');
++      const data = await this.api<{datasets: PreparedDataset[]}>('/catalog');
++      this.datasets.set(data.datasets);
++    } catch (error) {
++      this.catalogError.set(errorText(error));
++    }
++  }
++
++  chooseFile(event: Event) {
++    this.file.set((event.target as HTMLInputElement).files?.[0] ?? null);
++    this.error.set('');
++  }
++
++  async upload() {
++    const file = this.file();
++    if (!file || this.busy()) {
++      return;
++    }
++    this.busy.set(true);
++    this.error.set('');
++    try {
++      if (!file.name.toLowerCase().endsWith('.jsonl')) {
++        throw new Error('请选择 .jsonl 文件');
++      }
++      if (!file.size || file.size > this.maxBytes()) {
++        throw new Error(file.size ? '文件超过 1 MiB 限制' : '文件为空');
++      }
++      const bytes = new Uint8Array(await file.arrayBuffer());
++      const hash = await crypto.subtle.digest('SHA-256', bytes);
++      const fingerprint = JSON.stringify([
++        Array.from(new Uint8Array(hash), byte => byte.toString(16).padStart(2, '0')).join(''),
++        file.name,
++        this.synthetic,
++      ]);
++      const key = this.storageKey('upload');
++      const saved = JSON.parse(localStorage.getItem(key) || 'null');
++      const requestId: string = saved?.fingerprint === fingerprint ? saved.id : crypto.randomUUID();
++      localStorage.setItem(key, JSON.stringify({id: requestId, fingerprint}));
++      let binary = '';
++      for (let offset = 0; offset < bytes.length; offset += 8192) {
++        binary += String.fromCharCode(...bytes.subarray(offset, offset + 8192));
++      }
++      const record = await this.api<RequestRecord>('/upload', {
++        request_id: requestId, filename: file.name, synthetic_fixture: this.synthetic, content_base64: btoa(binary),
++      });
++      this.setCurrent(record);
++      this.seed = record.submitted_parameters?.seed ?? 42;
++      this.validationFraction = record.submitted_parameters?.validation_fraction ?? 0.25;
++    } catch (error) {
++      this.error.set(errorText(error));
++    } finally {
++      this.busy.set(false);
++    }
++  }
++
++  async submit() {
++    const current = this.current();
++    if (!current || this.busy()) {
++      return;
++    }
++    this.error.set('');
++    const seed = this.seed;
++    const fraction = this.validationFraction;
++    if (seed === null || !Number.isInteger(seed) || seed < -2147483648 || seed > 2147483647) {
++      this.error.set('seed 必须为 32 位整数');
++      return;
++    }
++    if (fraction === null || !(fraction > 0 && fraction < 1)) {
++      this.error.set('验证组比例必须大于 0 且小于 1');
++      return;
++    }
++    this.busy.set(true);
++    try {
++      this.setCurrent(await this.api<RequestRecord>('/submit', {
++        request_id: current.request_id, seed, validation_fraction: fraction,
++      }));
++    } catch (error) {
++      this.error.set(errorText(error));
++    } finally {
++      this.busy.set(false);
++      void this.refresh();
++    }
++  }
++
++  switchRequest(id: string) {
++    const record = this.requests().find(item => item.request_id === id);
++    if (record) {
++      this.error.set('');
++      this.seed = record.submitted_parameters?.seed ?? 42;
++      this.validationFraction = record.submitted_parameters?.validation_fraction ?? 0.25;
++      this.setCurrent(record);
++      void this.refresh();
++    }
++  }
++
++  async refresh() {
++    const previous = this.current();
++    if (!previous || this.refreshing || this.busy()) {
++      return;
++    }
++    this.refreshing = true;
++    try {
++      const record = await this.api<RequestRecord>('/requests/' + previous.request_id);
++      if (this.current()?.request_id === previous.request_id && !this.busy()) {
++        this.setCurrent(record);
++        this.statusError.set('');
++        if (record.status === 'completed' && previous.status !== 'completed') {
++          void this.loadCatalog();
++        }
++      }
++    } catch (error) {
++      this.statusError.set(errorText(error));
++    } finally {
++      this.refreshing = false;
++    }
++  }
++
++  async selectDataset(id: string) {
++    await this.catalogAction(async () => {
++      const result = await this.api<{selected: Selection}>('/select', {dataset_id: id});
++      this.selected.set(result.selected);
++    });
++  }
++
++  async downloadDataset(id: string) {
++    await this.catalogAction(async () => {
++      await saveArtifactResponse(await this.request('/archive', {dataset_id: id}), 'prepared-conversations.zip');
++    });
++  }
++
++  private async catalogAction(action: () => Promise<void>) {
++    if (this.busy()) {
++      return;
++    }
++    this.busy.set(true);
++    this.catalogError.set('');
++    try {
++      await action();
++    } catch (error) {
++      this.catalogError.set(errorText(error));
++    } finally {
++      this.busy.set(false);
++    }
++  }
++}
+diff --git a/src/app/layout/side-nav/side-nav.component.html b/src/app/layout/side-nav/side-nav.component.html
+index cb0133470b99369150ef4ecaa82d81ba52f03f26..32c635286cac3705c3b3fe1f71be4af580362bdc 100644
+--- a/src/app/layout/side-nav/side-nav.component.html
++++ b/src/app/layout/side-nav/side-nav.component.html
+@@ -24,0 +25,6 @@
++    <a class="item al-ico-datasets"
++       routerLink="/data-preparation"
++       routerLinkActive="active"
++       aria-label="数据准备"
++       smTooltip="数据准备"
++    ></a>
+diff --git a/src/app/shared/utils/artifact-download.ts b/src/app/shared/utils/artifact-download.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4bb84e7e0e422ebe6339a1788e3e1e3b69d49b81
+--- /dev/null
++++ b/src/app/shared/utils/artifact-download.ts
+@@ -0,0 +1,39 @@
++import {convertToReverseProxy, isFileserverUrl} from './url';
++
++export class ArtifactDownloadHttpError extends Error {
++  constructor(public readonly status: number) {
++    super(`Artifact download failed: HTTP ${status}`);
++  }
++}
++
++export const artifactNavigationUrl = (source: string): string => {
++  const url = new URL(convertToReverseProxy(source), window.location.href);
++  if (isFileserverUrl(url.href) && !url.searchParams.has('download')) {
++    // Append without reserializing signed/encoded query parameters.
++    url.search += (url.search ? '&' : '?') + 'download=';
++  }
++  return url.href;
++};
++
++export const saveArtifactResponse = async (response: Response, source: string): Promise<void> => {
++  if (!response.ok) {
++    throw new ArtifactDownloadHttpError(response.status);
++  }
++  const header = response.headers.get('Content-Disposition') || '';
++  const encodedName = /filename\*=UTF-8''([^;]+)/i.exec(header)?.[1];
++  const plainName = /filename=(?:"([^"]*)"|([^;]*))/i.exec(header);
++  let name = plainName?.[1] || plainName?.[2]?.trim();
++  try {
++    name = encodedName ? decodeURIComponent(encodedName) : name;
++    name ||= decodeURIComponent(new URL(source, window.location.href).pathname.split('/').pop());
++  } catch {}
++  const objectUrl = window.URL.createObjectURL(await response.blob());
++  try {
++    const anchor = document.createElement('a');
++    anchor.href = objectUrl;
++    anchor.download = (name || 'artifact').replace(/[/\\]/g, '_');
++    anchor.click();
++  } finally {
++    window.setTimeout(() => window.URL.revokeObjectURL(objectUrl), 1000);
++  }
++};
+diff --git a/src/app/shared/utils/url.ts b/src/app/shared/utils/url.ts
+index 991d8091be55fdc2061dc982b1f298ce8679bc09..7ab9f43a2f449f17cf35061cf45ba64a18aa7a11 100644
+--- a/src/app/shared/utils/url.ts
++++ b/src/app/shared/utils/url.ts
+@@ -3,4 +3,2 @@ import {HTTP} from '~/app.constants';
+-export const isFileserverUrl = (url: string) =>
+-  url?.startsWith(HTTP.FILE_BASE_URL);
+-
+-export const convertToReverseProxy = (url: string) => {
++/** Match only configured HTTP file roots, including their path boundaries. */
++const fileserverMatch = (value: string): {url: URL; root: URL} | undefined => {
+@@ -8,6 +6,24 @@ export const convertToReverseProxy = (url: string) => {
+-    const u = new URL(url);
+-    if (!u.pathname.startsWith('/files')) {
+-      u.protocol = window.location.protocol;
+-      u.host = window.location.host;
+-      u.pathname = 'files' + u.pathname;
+-      return u.toString();
++    if (!value || !HTTP.FILE_BASE_URL) {
++      return undefined;
++    }
++    const origin = window.location.origin;
++    const url = new URL(value, origin + '/');
++    if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) {
++      return undefined;
++    }
++    const aliases = (HTTP.FILE_SERVER_ALIASES || []).filter(source =>
++      typeof source === 'string' && /^https?:\/\//i.test(source));
++    const roots = [HTTP.FILE_BASE_URL, ...aliases, origin + '/files'];
++    for (const source of roots) {
++      let root: URL;
++      try {
++        root = new URL(source, origin + '/');
++      } catch {
++        continue;
++      }
++      const prefix = root.pathname.replace(/\/+$/, '');
++      if (['http:', 'https:'].includes(root.protocol) && !root.username && !root.password && !root.search && !root.hash &&
++        root.origin === url.origin &&
++        (!prefix || url.pathname === prefix || url.pathname.startsWith(prefix + '/'))) {
++        return {url, root};
++      }
+@@ -16 +32,17 @@ export const convertToReverseProxy = (url: string) => {
+-  return url;
++  return undefined;
++};
++
++export const isFileserverUrl = (url: string): boolean => !!fileserverMatch(url);
++
++/** Unknown external/storage URLs must retain their original signing/handling. */
++export const convertToReverseProxy = (value: string): string => {
++  const match = fileserverMatch(value);
++  if (!match) {
++    return value;
++  }
++  const prefix = match.root.pathname.replace(/\/+$/, '');
++  const suffix = match.url.pathname.slice(prefix.length);
++  const target = new URL('/files' + suffix, window.location.origin);
++  target.search = match.url.search;
++  target.hash = match.url.hash;
++  return target.href;
+diff --git a/src/app/webapp-common/experiments/effects/common-experiments-info.effects.ts b/src/app/webapp-common/experiments/effects/common-experiments-info.effects.ts
+index 02f07d2676083b6e7735a602603e1388abff81cc..c0b63cc2de19d19d38624ba9dc9ab41bd176f951 100644
+--- a/src/app/webapp-common/experiments/effects/common-experiments-info.effects.ts
++++ b/src/app/webapp-common/experiments/effects/common-experiments-info.effects.ts
+@@ -75 +75,2 @@ import {fromFetch} from 'rxjs/fetch';
+-import {isFileserverUrl} from '~/shared/utils/url';
++import {convertToReverseProxy} from '~/shared/utils/url';
++import {artifactNavigationUrl, ArtifactDownloadHttpError, saveArtifactResponse} from '~/shared/utils/artifact-download';
+@@ -407,39 +408,24 @@ export class CommonExperimentsInfoEffects {
+-    switchMap(([action, workspace]) => action.inMemory ?
+-      fromFetch(action.url,
+-        {
+-          ...getExtraHeaders(workspace?.id),
+-          method: 'GET',
+-          credentials: 'include',
+-          mode: 'cors'
+-        })
+-        .pipe(
+-          switchMap(res => from(res.blob()).pipe(
+-            map(fileBlob => {
+-              const url = window.URL.createObjectURL(fileBlob);
+-              const a = document.createElement('a');
+-              a.href = url;
+-              a.target = '_blank';
+-              const header = res.headers.get('Content-Disposition');
+-              const parts = header!.split(';');
+-              a.download = parts[1].split('=')[1];
+-              a.click();
+-            })
+-          )),
+-          catchError(() => of(action.url))
+-        ) :
+-      of(null)
+-        .pipe(map(() => {
+-          const src = new URL(action.url);
+-          if (isFileserverUrl(action.url)) {
+-            src.searchParams.set('download', '');
+-          }
+-          const a = document.createElement('a') as HTMLAnchorElement;
+-          a.target = '_blank';
+-          a.href = src.toString();
+-          a.click();
+-        }))
+-    ),
+-    catchError(() => of(commonInfoActions.downloadFailed())),
+-    map((status: string) => status ?
+-      commonInfoActions.downloadArtifacts({url: status}) :
+-      commonInfoActions.downloadSuccess())
++    switchMap(([action, workspace]) => {
++      const url = convertToReverseProxy(action.url);
++      return action.inMemory ? fromFetch(url, {
++        ...getExtraHeaders(workspace?.id),
++        method: 'GET',
++        credentials: 'include',
++        mode: 'cors'
++      }).pipe(
++        switchMap(response => from(saveArtifactResponse(response, url))),
++        map(() => commonInfoActions.downloadSuccess()),
++        catchError(error => error instanceof ArtifactDownloadHttpError ?
++          of(commonInfoActions.downloadFailed()) :
++          of(commonInfoActions.downloadArtifacts({url})))
++      ) : of(url).pipe(
++        tap(source => {
++          const anchor = document.createElement('a');
++          anchor.target = '_blank';
++          anchor.href = artifactNavigationUrl(source);
++          anchor.click();
++        }),
++        map(() => commonInfoActions.downloadSuccess())
++      );
++    }),
++    catchError(() => of(commonInfoActions.downloadFailed()))
+diff --git a/src/app/webapp-common/settings/admin/base-admin.service.ts b/src/app/webapp-common/settings/admin/base-admin.service.ts
+index 22f16f419ca040d7f7a600f7f359f0b981ce553e..63f56b8d20ea7f87d667ce6cf6e95ef6b6f8cf31 100644
+--- a/src/app/webapp-common/settings/admin/base-admin.service.ts
++++ b/src/app/webapp-common/settings/admin/base-admin.service.ts
+@@ -72,0 +73 @@ export class BaseAdminService {
++      url = convertToReverseProxy(url);
+diff --git a/src/environments/base.ts b/src/environments/base.ts
+index a4116ea729d8926d6125a084ce18b053aac02adc..ecdc332cf0108c2102d523fff98d7bde6724b855 100644
+--- a/src/environments/base.ts
++++ b/src/environments/base.ts
+@@ -30,0 +31 @@ export interface Environment {
++  fileServerAliases?: string[];
+diff --git a/tests/artifact-download.cjs b/tests/artifact-download.cjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..95fdab89f1dac531cf8bdc120e8981786a4d580a
+--- /dev/null
++++ b/tests/artifact-download.cjs
+@@ -0,0 +1,36 @@
++// No test runner dependency: exercise the actual TS helpers and download effect with RxJS.
++const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
++const ts=require('typescript'),rx=require('rxjs'),op=require('rxjs/operators');
++const root=path.resolve(__dirname,'..');let clicks=[],created=0,blobs=0;
++const HTTP={FILE_BASE_URL:'/files',FILE_SERVER_ALIASES:['https://old-files.example.test/storage']};
++const window={location:{origin:'https://ui.example.test',href:'https://ui.example.test/projects/p/tasks/t'},URL:{createObjectURL:()=>{created++;return 'blob:download'},revokeObjectURL:()=>{}},setTimeout:fn=>fn()};
++const document={createElement:()=>{const a={click:()=>clicks.push({...a})};return a;}};
++function load(file,mocks){const exports={};const js=ts.transpileModule(fs.readFileSync(path.join(root,file),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;vm.runInNewContext(js,{exports,require:n=>{assert.ok(n in mocks,'unexpected import '+n);return mocks[n]},URL,window,document,Response,Blob});return exports;}
++const url=load('src/app/shared/utils/url.ts',{'~/app.constants':{HTTP}});
++const download=load('src/app/shared/utils/artifact-download.ts',{'./url':url});
++let count=0;
++function test(name,fn){fn();count++;console.log('PASS',name);}
++const canonical='https://ui.example.test/files/a%20b/%E4%B8%AD%2Ftext.json?x=%2F%20&x=two+words#part';
++for(const input of ['/files/a%20b/%E4%B8%AD%2Ftext.json?x=%2F%20&x=two+words#part','files/a%20b/%E4%B8%AD%2Ftext.json?x=%2F%20&x=two+words#part',canonical,'https://old-files.example.test/storage/a%20b/%E4%B8%AD%2Ftext.json?x=%2F%20&x=two+words#part']){
++ test('trusted encoded/query '+input,()=>{assert.equal(url.isFileserverUrl(input),true);assert.equal(url.convertToReverseProxy(input),canonical);assert.equal(url.convertToReverseProxy(url.convertToReverseProxy(input)),canonical)});
++}
++for(const input of ['https://old-files.example.test.evil/storage/a','https://old-files.example.test/storage-other/a','https://old-files.example.test/storage%2Fa','https://old-files.example.test:8081/storage/a','http://old-files.example.test/storage/a','https://user@old-files.example.test/storage/a','https://unknown.example.test:8081/a','/files-backup/a','/files%2Fa','/files/../private/a','s3://bucket/files/a','gs://bucket/a','azure://container/a','https://bucket.s3.example.test/a?signature=%2F','blob:abc','javascript:alert(1)'])test('leave unknown unchanged '+input,()=>{assert.equal(url.isFileserverUrl(input),false);assert.equal(url.convertToReverseProxy(input),input)});
++test('invalid aliases never trust the whole origin',()=>{const original=HTTP.FILE_SERVER_ALIASES;HTTP.FILE_SERVER_ALIASES=['','relative','http://[bad',...original];assert.equal(url.isFileserverUrl('/private/a'),false);assert.equal(url.isFileserverUrl('https://old-files.example.test/storage/a'),true);HTTP.FILE_SERVER_ALIASES=original;});
++test('root URL for report upload',()=>assert.equal(url.convertToReverseProxy('/files'),'https://ui.example.test/files'));
++test('configured source prefix',()=>{HTTP.FILE_BASE_URL='https://files.example.test/objects';assert.equal(url.convertToReverseProxy('https://files.example.test/objects/a%2Fb?q=%20'),'https://ui.example.test/files/a%2Fb?q=%20');assert.equal(url.isFileserverUrl('https://files.example.test/objects-other/a'),false);HTTP.FILE_BASE_URL='/files';});
++test('relative navigation and preserved query',()=>assert.equal(download.artifactNavigationUrl('/files/a?x=%20&x=+'),'https://ui.example.test/files/a?x=%20&x=+&download='));
++test('navigation repeated download param',()=>assert.equal(download.artifactNavigationUrl('/files/a?download=&x=%2F'),'https://ui.example.test/files/a?download=&x=%2F'));
++test('external signed navigation unchanged',()=>assert.equal(download.artifactNavigationUrl('https://external.example.test/a?sig=%20'),'https://external.example.test/a?sig=%20'));
++(async()=>{
++ for(const status of [401,404,500]){const old=created;await assert.rejects(download.saveArtifactResponse(new Response('error',{status}),'/files/error'),e=>e instanceof download.ArtifactDownloadHttpError&&e.status===status);assert.equal(created,old);count++;console.log('PASS HTTP '+status+' never saved');}
++ for(const [header,name] of [['inline; filename="cpu-smoke.json"','cpu-smoke.json'],[null,'fallback.json'],["attachment; filename*=UTF-8''%E4%B8%AD.json",'中.json']]){const headers=header?{'Content-Disposition':header}:{};await download.saveArtifactResponse(new Response('{}',{status:200,headers}),'/files/fallback.json');assert.equal(clicks.at(-1).download,name);count++;console.log('PASS filename '+name);}
++ // Extract and run the production effect expression: HTTP failures must emit downloadFailed, not retry/navigation/success.
++ const source=fs.readFileSync(path.join(root,'src/app/webapp-common/experiments/effects/common-experiments-info.effects.ts'),'utf8');const start=source.indexOf('  downloadArtifact =');const end=source.indexOf('\n\n\n  // Changes fields',start);const expression=source.slice(start,end);
++ for(const status of [200,401,404]){
++  const actions$=new rx.Subject();const codes={downloadSuccess:()=>({type:'success'}),downloadFailed:()=>({type:'failed'}),downloadArtifacts:x=>({type:'download',...x})};const outputs=[];const requests=[];const scope={...rx,...op,...download,...url,window,document,actions$,store:{select:()=>rx.of({id:'workspace'})},selectActiveWorkspace:0,commonInfoActions:codes,createEffect:f=>f(),ofType:()=>op.filter(()=>true),concatLatestFrom:f=>op.concatMap(value=>rx.of(value).pipe(op.withLatestFrom(...[].concat(f())))),getExtraHeaders:()=>({}),fromFetch:request=>{requests.push(request);return rx.of(new Response('{}',{status}))}};
++  const js=ts.transpileModule('class Harness {actions$=actions$;store=store;'+expression+'}\nconst instance=new Harness();instance.downloadArtifact.subscribe(result=>outputs.push(result));',{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;scope.outputs=outputs;vm.runInNewContext(js,scope);
++  actions$.next({url:'https://old-files.example.test/storage/a.json',inMemory:true});await new Promise(r=>setTimeout(r,20));assert.deepEqual(outputs.map(x=>x.type),[status===200?'success':'failed']);assert.equal(requests[0],'https://ui.example.test/files/a.json');count++;console.log('PASS actual effect HTTP '+status);
++  if(status===200){actions$.next({url:'/files/a.json?x=%20',inMemory:false});assert.equal(clicks.at(-1).href,'https://ui.example.test/files/a.json?x=%20&download=');count++;console.log('PASS actual relative fallback effect');}
++ }
++ console.log('TOTAL PASS',count);
++})().catch(e=>{console.error(e);process.exitCode=1;});

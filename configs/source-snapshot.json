@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-11T15:50:00+08:00",
+  "root_repository": {
+    "url": "https://github.com/zwhyqqqq/TieSheAI",
+    "branch": "codex/tiesheai-t03",
+    "previous_published_commit": "b2cdbef09e663113e1ef449114acb7e679a2ac50",
+    "snapshot_commit": "resolve the Git commit containing this manifest",
+    "local_checkpoint_branch": "codex/source-save-root-20261111"
+  },
+  "web": {
+    "repository": "https://github.com/T1-Otaku/clearml-web.git",
+    "base_commit": "5c4943bfecb3971e50b379b0af1db6b4c63954cf",
+    "local_snapshot_branch": "codex/source-save-20261111",
+    "local_snapshot_commit": "15afce31f2e035665ced9e61950d46423086b30e",
+    "snapshot_tree": "180bb9f47ea451587f17afa5bb4c2e5d9982fb9c",
+    "patch": "patches/clearml-web/source-save-20261111.patch",
+    "patch_sha256": "e7520fdf6377e5714d11180dade4d3c5ba44676ef005b5a7da7ca37450454828",
+    "changed_files": [
+      "angular.json",
+      "src/app/app.constants.ts",
+      "src/app/app.routes.ts",
+      "src/app/features/data-preparation/data-preparation.component.html",
+      "src/app/features/data-preparation/data-preparation.component.scss",
+      "src/app/features/data-preparation/data-preparation.component.ts",
+      "src/app/layout/side-nav/side-nav.component.html",
+      "src/app/shared/utils/artifact-download.ts",
+      "src/app/shared/utils/url.ts",
+      "src/app/webapp-common/experiments/effects/common-experiments-info.effects.ts",
+      "src/app/webapp-common/settings/admin/base-admin.service.ts",
+      "src/environments/base.ts",
+      "tests/artifact-download.cjs"
+    ],
+    "distribution": "complete patch against public base stored in root repository",
+    "patch_context_lines": 0,
+    "apply_option": "--unidiff-zero"
+  },
+  "server": {
+    "repository": "https://github.com/T1-Otaku/clearml-server.git",
+    "commit": "2ebdc43951b9432cc7fa528bbb3a7100fc6fe805",
+    "tree": "312bf6afd2a81301f4742dc21c83760c2b44a5e3",
+    "worktree_clean": true
+  },
+  "historical_runtime_release": {
+    "web": "data-entry-20261111-v1",
+    "web_version": "2.5.0-data-entry-f4670e27128c",
+    "deployed_source_rechecked": false
+  },
+  "scope": "source, tests, deployment templates and handoff documents"
+}

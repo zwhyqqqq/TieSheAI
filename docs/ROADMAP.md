@@ -73,14 +73,14 @@ Demo 使用公开数据和开源模型，至少真实跑通一条数据准备→
 | 完整 T01-C3 | 仍未通过；Model GENERAL/菜单下载行为、Pipeline、四风险触发与其他受控项仍待分别验收或明确范围裁定 |
 | 业务组件 | 对话数据准备核心、网页入口及公开 JSONL 样例已验。文档解析、训练、推理、评估和业务 Pipeline 待接入或验证 |
 | GPU | T03-A 复验 `nvidia-smi` 退出 9，VMware 来宾无 NVIDIA PCI 设备；真实训练条件受阻 |
-| Git | 本地版本检查点已完成；根与 Web 的成果已提交、未 push，两个 Fork 保持独立；恢复范围见 [检查点报告](VERSION_CHECKPOINT.md)；最新工作区修改仍须逐次检查 |
+| Git | 根仓库使用 codex/tiesheai-t03。当前源码保存覆盖主项目及独立Web的完整补丁，Web本地提交为15afce31f2e035665ced9e61950d46423086b30e，Server固定原公开提交。见 [当前恢复说明](SOURCE_SNAPSHOT.md) 和 [历史检查点](VERSION_CHECKPOINT.md) |
 | 运维 | 完整文件访问控制、远程端到端、环境重建、重启/备份恢复及长期负载未验收 |
 
 规划期间重新读取了 C1 更新后的 AGENTS / STATUS / HANDOFF / DECISIONS，保留其成果。
 官方 8080 六服务基线保留；18080 已独立提供 Web 2.5.0 Fork，后端仍为官方 Server 2.4.0。
 两站版本分别记录；C2 浏览器拦截了偏好/统计写入及外部请求，Server Fork 仍未运行验证。
-18080 当前为独立下载修复 release `artifact-download-20261110-v1`，版本
-`2.5.0-artifact-fix-0b92177bcb35`；Web HEAD 仅为基点，另有未提交补丁/源码清单，旧 C2 v2 保留。
+18080 最近验收的 release 为 `data-entry-20261111-v1`，Web 版本
+`2.5.0-data-entry-f4670e27128c`。Web HEAD 为基点，另有本地未提交修改，发布清单和历史 release 见 [数据入口报告](T02B_WEB_DATA_ENTRY.md)。
 基础与 CPU 链路依据：[部署结果](../infra/DEPLOYMENT_RESULT.md)、[T01-B 验收](T01B_ACCEPTANCE.md)。
 
 ## 4. 架构与代码归属
@@ -189,7 +189,7 @@ T02-B 已按 [任务要求](T02B_TASK.md) 完成网页闭环与 Fork 回退恢�
 ### 保留候选：Model GENERAL/菜单下载最小修复
 
 本地版本检查点及 C2 已通过；源码/产物/镜像/运行版本以各自报告为准。
-C2 部署文件尚未提交，保留其全部成果；GitHub 不能替代当前本地工作区作为最新状态来源。
+根仓库保存部署、训练适配源码及独立Web完整补丁。恢复界面源码时按 [快照说明](SOURCE_SNAPSHOT.md) 应用补丁并核对文件树，发布版本按部署报告核对。
 
 C3-B 首轮已在独立项目创建两个 Dataset 版本、Draft Task 与一个 OutputModel，
 两站各 24 步、3 份真实下载通过，原失败/限制留在兼容矩阵，不重复造夹具。

@@ -229,3 +229,10 @@
 - 每轮 assistant 正文和 EOS 参与损失，提示与 padding 标签为 `-100`。使用动态右 padding，超出长度上限报出文件与行号。Trainer 的 CPU dataloader 已核对输入张量和标签。
 - GPU 路径使用 Unsloth 加载无量化基座、配置 LoRA，Trainer 直接使用已编码的标签。CUDA 门禁先于对象和权重。日志、adapter 包和 ClearML Model 登记已有源码，运行结果以后续 GPU 实测为准。
 - 依据：[训练适配器验收](T03_TRAINING_ADAPTER.md) 和本机 `infra/evidence/t03-training-adapter/`。
+
+## D19 当前源码快照覆盖独立 Web Fork 改动
+
+- 用户于2026-11-11明确授权推送当前项目保存。根仓库继续使用 `codex/tiesheai-t03` 分支。
+- GitHub集成对主项目有写权限，对两个Fork上游有读取权限。Web改动提交到本地独立分支，完整补丁和公开基点存入根仓库，Server固定其原公开提交。
+- 使用 `configs/source-snapshot.json` 记录 Web提交/tree、补丁SHA-256和Server版本。独立恢复的Web完整文件树已核对一致。
+- 历史 `configs/revisions.json` 保留原检查点记录，当前保存方式见 [源码恢复说明](SOURCE_SNAPSHOT.md)。

@@ -1,0 +1,34 @@
+{
+  "clearml/server:2.4.0": {
+    "id": "sha256:f71fdc72e0e53c591dcb474dcfc2ee59c0bad90953f6fbf2fafde65d2177326d",
+    "repo_digests": [
+      "clearml/server@sha256:5ec4aed2e40c619da63198c22e765a00b4e3e5c06081a9c0a4ae237df66fb7bb"
+    ],
+    "architecture": "amd64",
+    "os": "linux"
+  },
+  "mongo:8.0.15": {
+    "id": "sha256:075ea1e18b77712810999d1eb971c818c4ed3dd6716b42285320c15c3c79198f",
+    "repo_digests": [
+      "mongo@sha256:f4d54619262ae3bc6a0a8efbebcef970b87b8ad70697479a75ce308a6f400158"
+    ],
+    "architecture": "amd64",
+    "os": "linux"
+  },
+  "redis:8.2.3": {
+    "id": "sha256:806c6d50c4ba299e7a86ee18c7cd6446067b2db310567c1ca29f7521bf55859f",
+    "repo_digests": [
+      "redis@sha256:0908d9af26bf9b985e984a40a5eb82eed229b07a3317eee6843832c3cc3a9619"
+    ],
+    "architecture": "amd64",
+    "os": "linux"
+  },
+  "elasticsearch:8.19.9": {
+    "id": "sha256:4428f6bdc4f57b428aa60a61acdc081fd1f9860902fb409b2f871c33bbf7b23a",
+    "repo_digests": [
+      "elasticsearch@sha256:dee84085936b5b5fc3a6d322ff7545c939f99269b2d94bf19ea4af968893bbc4"
+    ],
+    "architecture": "amd64",
+    "os": "linux"
+  }
+}

@@ -1,0 +1,14 @@
+{"id":"0","messages":[{"content":"SYNTHETIC 测试问题 0","role":"user"},{"content":"SYNTHETIC 测试答案 0","role":"assistant"}],"source_id":"SYNTHETIC-source-0"}
+{"id":"1","messages":[{"content":"SYNTHETIC 测试问题 1","role":"user"},{"content":"SYNTHETIC 测试答案 1","role":"assistant"}],"source_id":"SYNTHETIC-source-0"}
+{"id":"2","messages":[{"content":"SYNTHETIC 测试问题 2","role":"user"},{"content":"SYNTHETIC 测试答案 2","role":"assistant"}],"source_id":"SYNTHETIC-source-1"}
+{"id":"3","messages":[{"content":"SYNTHETIC 测试问题 3","role":"user"},{"content":"SYNTHETIC 测试答案 3","role":"assistant"}],"source_id":"SYNTHETIC-source-1"}
+{"id":"4","messages":[{"content":"SYNTHETIC 测试问题 4","role":"user"},{"content":"SYNTHETIC 测试答案 4","role":"assistant"}],"source_id":"SYNTHETIC-source-2"}
+{"id":"5","messages":[{"content":"SYNTHETIC 测试问题 5","role":"user"},{"content":"SYNTHETIC 测试答案 5","role":"assistant"}],"source_id":"SYNTHETIC-source-2"}
+{"id":"6","messages":[{"content":"SYNTHETIC 测试问题 6","role":"user"},{"content":"SYNTHETIC 测试答案 6","role":"assistant"}],"source_id":"SYNTHETIC-source-3"}
+{"id":"7","messages":[{"content":"SYNTHETIC 测试问题 7","role":"user"},{"content":"SYNTHETIC 测试答案 7","role":"assistant"}],"source_id":"SYNTHETIC-source-3"}
+{"id":"8","messages":[{"content":"SYNTHETIC 测试问题 8","role":"user"},{"content":"SYNTHETIC 测试答案 8","role":"assistant"}],"source_id":"SYNTHETIC-source-4"}
+{"id":"9","messages":[{"content":"SYNTHETIC 测试问题 9","role":"user"},{"content":"SYNTHETIC 测试答案 9","role":"assistant"}],"source_id":"SYNTHETIC-source-4"}
+{"id":"10","messages":[{"content":"SYNTHETIC 测试问题 10","role":"user"},{"content":"SYNTHETIC 测试答案 10","role":"assistant"}],"source_id":"SYNTHETIC-source-5"}
+{"id":"11","messages":[{"content":"SYNTHETIC 测试问题 11","role":"user"},{"content":"SYNTHETIC 测试答案 11","role":"assistant"}],"source_id":"SYNTHETIC-source-5"}
+{"id":"duplicate-1","messages":[{"content":"SYNTHETIC 测试问题 1","role":"user"},{"content":"SYNTHETIC 测试答案 1","role":"assistant"}],"source_id":"SYNTHETIC-source-0"}
+{"id":"duplicate-2","messages":[{"content":"SYNTHETIC 测试问题 2","role":"user"},{"content":"SYNTHETIC 测试答案 2","role":"assistant"}],"source_id":"SYNTHETIC-source-0"}

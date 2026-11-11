@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-09T22:06:00+08:00",
+  "scope": "local source checkpoint after accepted T01-C1; T01-C2 not started",
+  "root_repository": {
+    "path": ".",
+    "branch": "master",
+    "checkpoint_ref": "refs/heads/master",
+    "origin": "https://github.com/zwhyqqqq/TieSheAI.git",
+    "commit_before_checkpoint": null,
+    "final_commit_record": "infra/evidence/version-checkpoint/result.json (local, ignored)",
+    "bundle": "infra/evidence/version-checkpoint/bundles/TieSheAI.bundle"
+  },
+  "forks": [
+    {
+      "name": "clearml-web",
+      "path": "clearml-web",
+      "repository_kind": "independent Git repository, not a submodule or subtree",
+      "branch": "master",
+      "origin": "https://github.com/T1-Otaku/clearml-web.git",
+      "base_commit": "5c4943bfecb3971e50b379b0af1db6b4c63954cf",
+      "saved_commit": "be71d50e7504eb00a2e09900fabbe8697ed23558",
+      "source_version": "2.5.0",
+      "version_file": "package.json",
+      "checkpoint_changes": ["angular.json"],
+      "angular_json_sha256": "6c19a6917833ab6a151198eb612c362ded89be768a9919d0fade77d5ab98f2b9",
+      "validation": "T01-C1 build and static assets accepted before checkpoint; no deployment or API compatibility acceptance",
+      "local_commit_pushed": false,
+      "bundle": "infra/evidence/version-checkpoint/bundles/clearml-web.bundle"
+    },
+    {
+      "name": "clearml-server",
+      "path": "clearml-server",
+      "repository_kind": "independent Git repository, not a submodule or subtree",
+      "branch": "master",
+      "origin": "https://github.com/T1-Otaku/clearml-server",
+      "base_commit": "2ebdc43951b9432cc7fa528bbb3a7100fc6fe805",
+      "saved_commit": "2ebdc43951b9432cc7fa528bbb3a7100fc6fe805",
+      "source_version": "2.4.0",
+      "version_file": "apiserver/version.py",
+      "checkpoint_changes": [],
+      "validation": "clean source repository; no empty commit; Fork runtime integration not verified",
+      "bundle": "infra/evidence/version-checkpoint/bundles/clearml-server.bundle"
+    }
+  ],
+  "historical_runtime_baseline": {
+    "application_image": "clearml/server:2.4.0",
+    "application_image_digest": "sha256:5ec4aed2e40c619da63198c22e765a00b4e3e5c06081a9c0a4ae237df66fb7bb",
+    "release_web_version": "2.4.0-722",
+    "image_lock": "infra/images.lock.json",
+    "runtime_rechecked_in_checkpoint_task": false,
+    "forks_deployed": false
+  },
+  "backup_boundary": {
+    "bundle_ref": "refs/heads/master",
+    "include_all_refs": false,
+    "excluded_internal_refs": "refs/codex/*",
+    "unpublished_local_commits_available_from_github": false,
+    "includes_database_volumes_credentials_dependencies_or_build_outputs": false,
+    "proves_cross_host_deployment_or_environment_reproduction": false
+  }
+}

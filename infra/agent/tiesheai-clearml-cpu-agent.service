@@ -1,0 +1,16 @@
+[Unit]
+Description=TieSheAI ClearML CPU Agent (rail-cpu)
+After=network.target docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/root/TieSheAI
+ExecStart=/bin/bash /root/TieSheAI/infra/agent/start.sh
+Restart=on-failure
+RestartSec=10
+UMask=0077
+KillMode=control-group
+TimeoutStopSec=90
+
+[Install]
+WantedBy=multi-user.target

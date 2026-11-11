@@ -1,0 +1,30 @@
+name: tiesheai-web-fork
+services:
+  web:
+    image: clearml/server:2.4.0@sha256:5ec4aed2e40c619da63198c22e765a00b4e3e5c06081a9c0a4ae237df66fb7bb
+    entrypoint: ["/usr/sbin/nginx"]
+    command: ["-c", "/etc/nginx/fork.conf", "-g", "daemon off;"]
+    restart: unless-stopped
+    user: "65534:65534"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    ports: ["127.0.0.1:18080:8080"]
+    volumes:
+      - ${FORK_RELEASE_DIR:-../.local/web-fork/releases/artifact-download-20261110-v1}:/srv/web:ro
+      - ./nginx.conf:/etc/nginx/fork.conf:ro
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    networks: [backend]
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import json,urllib.request; assert json.load(urllib.request.urlopen('http://127.0.0.1:8080/version.json'))['version'].startswith('2.5.0-')"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}
+networks:
+  backend:
+    external: true
+    name: tiesheai-clearml_default

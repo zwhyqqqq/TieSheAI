@@ -1,0 +1,917 @@
+{
+  "allowed": [
+    {
+      "endpoint": "projects.get_by_id",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/projects.py",
+          "line": 63,
+          "end_line": 75,
+          "function": "get_by_id"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "projects.get_all",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/projects.py",
+          "line": 259,
+          "end_line": 278,
+          "function": "get_all"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "projects.get_all_ex",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/projects.py",
+          "line": 135,
+          "end_line": 255,
+          "function": "get_all_ex"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "projects.get_hyper_parameters",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/projects.py",
+          "line": 433,
+          "end_line": 446,
+          "function": "get_hyper_parameters"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "projects.get_hyperparam_values",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/projects.py",
+          "line": 454,
+          "end_line": 471,
+          "function": "get_hyperparam_values"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "projects.get_model_metadata_keys",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/projects.py",
+          "line": 393,
+          "end_line": 406,
+          "function": "get_model_metadata_keys"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "projects.get_model_metadata_values",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/projects.py",
+          "line": 410,
+          "end_line": 425,
+          "function": "get_model_metadata_values"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "projects.get_model_tags",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/projects.py",
+          "line": 502,
+          "end_line": 510,
+          "function": "get_model_tags"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "projects.get_project_tags",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/projects.py",
+          "line": 475,
+          "end_line": 482,
+          "function": "get_project_tags"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "projects.get_task_parents",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/projects.py",
+          "line": 544,
+          "end_line": 555,
+          "function": "get_task_parents"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "projects.get_task_tags",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/projects.py",
+          "line": 488,
+          "end_line": 496,
+          "function": "get_task_tags"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "projects.get_unique_metric_variants",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/projects.py",
+          "line": 378,
+          "end_line": 389,
+          "function": "get_unique_metric_variants"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "projects.get_user_names",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/projects.py",
+          "line": 559,
+          "end_line": 567,
+          "function": "get_user_names"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "tasks.get_all",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/tasks.py",
+          "line": 273,
+          "end_line": 288,
+          "function": "get_all"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "tasks.get_all_ex",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/tasks.py",
+          "line": 242,
+          "end_line": 255,
+          "function": "get_all_ex"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "tasks.get_by_id",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/tasks.py",
+          "line": 200,
+          "end_line": 208,
+          "function": "get_by_id"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "tasks.get_by_id_ex",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/tasks.py",
+          "line": 259,
+          "end_line": 269,
+          "function": "get_by_id_ex"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "tasks.get_configuration_names",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/tasks.py",
+          "line": 877,
+          "end_line": 888,
+          "function": "get_configuration_names"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "tasks.get_configurations",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/tasks.py",
+          "line": 861,
+          "end_line": 870,
+          "function": "get_configurations"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "tasks.get_hyper_params",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/tasks.py",
+          "line": 822,
+          "end_line": 827,
+          "function": "get_hyper_params"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "tasks.get_types",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/tasks.py",
+          "line": 292,
+          "end_line": 297,
+          "function": "get_types"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "models.get_all",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/models.py",
+          "line": 171,
+          "end_line": 184,
+          "function": "get_all"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "models.get_all_ex",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/models.py",
+          "line": 130,
+          "end_line": 156,
+          "function": "get_all_ex"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "models.get_by_id",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/models.py",
+          "line": 81,
+          "end_line": 97,
+          "function": "get_by_id"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "models.get_by_id_ex",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/models.py",
+          "line": 160,
+          "end_line": 167,
+          "function": "get_by_id_ex"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "models.get_by_task_id",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/models.py",
+          "line": 101,
+          "end_line": 126,
+          "function": "get_by_task_id"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "models.get_frameworks",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/models.py",
+          "line": 188,
+          "end_line": 198,
+          "function": "get_frameworks"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "events.get_multi_task_metrics",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/events.py",
+          "line": 988,
+          "end_line": 1005,
+          "function": "get_multi_task_metrics"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "events.get_multi_task_plots",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/events.py",
+          "line": 580,
+          "end_line": 609,
+          "function": "get_multi_task_plots_v1_7"
+        },
+        {
+          "path": "services/events.py",
+          "line": 645,
+          "end_line": 662,
+          "function": "get_multi_task_plots"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "events.get_scalar_metric_data",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/events.py",
+          "line": 424,
+          "end_line": 451,
+          "function": "get_scalar_metric_data"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "events.get_scalar_metrics_and_variants",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/events.py",
+          "line": 290,
+          "end_line": 304,
+          "function": "get_scalar_metrics_and_variants"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "events.get_task_events",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/events.py",
+          "line": 349,
+          "end_line": 420,
+          "function": "get_task_events"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "events.get_task_latest_scalar_values",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/events.py",
+          "line": 455,
+          "end_line": 473,
+          "function": "get_task_latest_scalar_values"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "events.get_task_log",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/events.py",
+          "line": 111,
+          "end_line": 129,
+          "function": "get_task_log_v1_5"
+        },
+        {
+          "path": "services/events.py",
+          "line": 133,
+          "end_line": 160,
+          "function": "get_task_log_v1_7"
+        },
+        {
+          "path": "services/events.py",
+          "line": 164,
+          "end_line": 188,
+          "function": "get_task_log"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "events.get_task_metrics",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/events.py",
+          "line": 971,
+          "end_line": 984,
+          "function": "get_task_metrics"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "events.get_task_plots",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/events.py",
+          "line": 666,
+          "end_line": 698,
+          "function": "get_task_plots_v1_7"
+        },
+        {
+          "path": "services/events.py",
+          "line": 713,
+          "end_line": 734,
+          "function": "get_task_plots"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "events.get_task_single_value_metrics",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/events.py",
+          "line": 562,
+          "end_line": 576,
+          "function": "get_task_single_value_metrics"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "events.get_vector_metrics_and_variants",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/events.py",
+          "line": 272,
+          "end_line": 286,
+          "function": "get_vector_metrics_and_variants"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "events.multi_task_scalar_metrics_iter_histogram",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/events.py",
+          "line": 529,
+          "end_line": 546,
+          "function": "multi_task_scalar_metrics_iter_histogram"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "events.scalar_metrics_iter_histogram",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/events.py",
+          "line": 481,
+          "end_line": 495,
+          "function": "scalar_metrics_iter_histogram"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "events.vector_metrics_iter_histogram",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/events.py",
+          "line": 311,
+          "end_line": 328,
+          "function": "vector_metrics_iter_histogram"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "queues.get_all",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/queues.py",
+          "line": 104,
+          "end_line": 116,
+          "function": "get_all"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "queues.get_all_ex",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/queues.py",
+          "line": 86,
+          "end_line": 100,
+          "function": "get_all_ex"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "queues.get_by_id",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/queues.py",
+          "line": 54,
+          "end_line": 60,
+          "function": "get_by_id"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "queues.get_default",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/queues.py",
+          "line": 64,
+          "end_line": 66,
+          "function": "get_by_id_2_4"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "queues.get_num_entries",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/queues.py",
+          "line": 412,
+          "end_line": 413,
+          "function": "get_num_entries"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "queues.get_queue_metrics",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/queues.py",
+          "line": 331,
+          "end_line": 379,
+          "function": "get_queue_metrics"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "queues.peek_task",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/queues.py",
+          "line": 403,
+          "end_line": 408,
+          "function": "peek_task"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "workers.get_activity_report",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/workers.py",
+          "line": 136,
+          "end_line": 156,
+          "function": "get_activity_report"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "workers.get_all",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/workers.py",
+          "line": 38,
+          "end_line": 47,
+          "function": "get_all"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "workers.get_count",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/workers.py",
+          "line": 53,
+          "end_line": 62,
+          "function": "get_count"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "workers.get_metric_keys",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/workers.py",
+          "line": 118,
+          "end_line": 126,
+          "function": "get_metric_keys"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "workers.get_stats",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/workers.py",
+          "line": 165,
+          "end_line": 205,
+          "function": "get_stats"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "users.get_all",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/users.py",
+          "line": 91,
+          "end_line": 97,
+          "function": "get_all"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "users.get_all_ex",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/users.py",
+          "line": 62,
+          "end_line": 66,
+          "function": "get_all_ex"
+        },
+        {
+          "path": "services/users.py",
+          "line": 70,
+          "end_line": 87,
+          "function": "get_all_ex2_8"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "users.get_current_user",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/users.py",
+          "line": 101,
+          "end_line": 127,
+          "function": "get_current_user"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "users.get_preferences",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/users.py",
+          "line": 192,
+          "end_line": 193,
+          "function": "get_preferences"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "organization.get_entities_count",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/organization.py",
+          "line": 84,
+          "end_line": 192,
+          "function": "get_entities_count"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "organization.get_project_workloads",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/organization.py",
+          "line": 415,
+          "end_line": 424,
+          "function": "get_project_workloads"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "organization.get_tags",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/organization.py",
+          "line": 48,
+          "end_line": 61,
+          "function": "get_tags"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "organization.get_user_companies",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/organization.py",
+          "line": 65,
+          "end_line": 80,
+          "function": "get_user_companies"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "reports.get_all_ex",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/reports.py",
+          "line": 180,
+          "end_line": 207,
+          "function": "get_all_ex"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "reports.get_tags",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/reports.py",
+          "line": 432,
+          "end_line": 434,
+          "function": "get_tags"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "reports.get_task_data",
+      "category": "read",
+      "source": [
+        {
+          "path": "services/reports.py",
+          "line": 224,
+          "end_line": 298,
+          "function": "get_task_data"
+        }
+      ],
+      "reason": "Reviewed query/aggregation/projection; no business mutation, enqueue or worker execution"
+    },
+    {
+      "endpoint": "server.info",
+      "category": "read",
+      "reason": "Server capability/version read"
+    },
+    {
+      "endpoint": "debug.ping",
+      "category": "read",
+      "reason": "Health read"
+    },
+    {
+      "endpoint": "login.supported_modes",
+      "category": "read",
+      "reason": "Read existing login modes"
+    },
+    {
+      "endpoint": "auth.login",
+      "category": "authentication",
+      "reason": "Explicitly authorized existing-user login; session cookie only, no credential creation"
+    },
+    {
+      "endpoint": "events.debug_images",
+      "category": "read scoped to new Dataset IDs",
+      "source": [
+        {
+          "path": "services/events.py",
+          "line": 856,
+          "end_line": 881,
+          "function": "get_debug_images"
+        },
+        {
+          "path": "bll/event/metric_events_iterator.py",
+          "line": 80,
+          "end_line": 145,
+          "function": "get_task_events"
+        }
+      ],
+      "reason": "Authorized fixture preview read: validate task IDs, query ES, optional ephemeral Redis scroll cache; no business mutation. Browser also validates metrics task IDs against ledger."
+    }
+  ],
+  "blocked": {
+    "users.set_preferences": "User settings write",
+    "server.report_stats_option": "Server statistics option write",
+    "reports.share": "Share/access side effect; static analysis only",
+    "queues.get_next_task": "Destructive dequeue/assignment despite get name",
+    "pipelines.start_pipeline": "Creates/runs controller",
+    "pipelines.delete_runs": "Deletes runs",
+    "tasks.enqueue": "Enqueue task",
+    "tasks.dequeue": "Task state/queue mutation"
+  },
+  "unknown": "deny and report; no mock/success fulfillment",
+  "external": "deny except existing local API/file origins under explicitly constrained policy"
+}

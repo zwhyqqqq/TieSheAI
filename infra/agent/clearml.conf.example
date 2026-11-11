@@ -1,0 +1,22 @@
+# Generated credentials stay only in infra/.local/agent/clearml.conf (0600).
+api {
+  api_server: "http://127.0.0.1:8008"
+  web_server: "http://127.0.0.1:8080"
+  files_server: "http://127.0.0.1:8081"
+  credentials {
+    access_key: "REPLACE_ACCESS_KEY"
+    secret_key: "REPLACE_SECRET_KEY"
+  }
+}
+agent {
+  worker_id: "tiesheai-rail-cpu:cpu0"
+  worker_name: "tiesheai-rail-cpu"
+  default_python: "/root/miniconda3/envs/clearml-backend/bin/python"
+  venvs_dir: "/root/TieSheAI/infra/.local/agent/work"
+  vcs_cache.path: "/root/TieSheAI/infra/.local/agent/vcs"
+  pip_download_cache.path: "/root/TieSheAI/infra/.local/agent/pip"
+}
+sdk {
+  development.default_output_uri: "http://127.0.0.1:8081"
+  storage.cache.default_base_dir: "/root/TieSheAI/infra/.local/agent/sdk-cache"
+}

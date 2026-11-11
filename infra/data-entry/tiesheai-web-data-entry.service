@@ -1,0 +1,19 @@
+[Unit]
+Description=TieSheAI Fork authenticated data-entry SDK adapter
+After=network.target docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/root/TieSheAI
+ExecStart=/root/miniconda3/envs/clearml-backend/bin/python -B /root/TieSheAI/infra/.local/data-entry/current/integrations/data_entry/server.py
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=TIESHEAI_DATA_ENTRY_STATE=/root/TieSheAI/infra/.local/data-entry
+Environment=NO_PROXY=127.0.0.1,localhost
+UMask=0077
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

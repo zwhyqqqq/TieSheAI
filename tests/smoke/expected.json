@@ -1,0 +1,6 @@
+{
+  "device": "cpu",
+  "message": "TieSheAI T01-B CPU smoke test",
+  "schema_version": 1,
+  "sum_squares": 333383335000
+}

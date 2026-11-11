@@ -1,0 +1,5 @@
+services:
+  web:
+    volumes:
+      - ../.local/web-fork/adapters/${DATA_ENTRY_RELEASE:-data-entry-20261111-v1}/nginx.conf:/etc/nginx/fork.conf:ro
+      - ../.local/data-entry/socket:/run/data-entry:ro
